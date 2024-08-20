@@ -17,6 +17,7 @@ const Feed = () => {
       setPosts(data)
       setFilteredPost(data)
     }
+    console.log(posts)
     fetchPost()
     
   },[])
