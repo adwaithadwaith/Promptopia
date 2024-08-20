@@ -10,13 +10,14 @@ const Feed = () => {
   const [ posts, setPosts] = useState([])
   const  [filteredPost, setFilteredPost] = useState([])
 
+  const fetchPost = async ()=>{
+    const response = await fetch('/api/prompt')
+    const data = await response.json()
+    setPosts(data)
+    setFilteredPost(data)
+  }
   useEffect(()=>{
-    const fetchPost = async ()=>{
-      const response = await fetch('/api/prompt')
-      const data = await response.json()
-      setPosts(data)
-      setFilteredPost(data)
-    }
+    
     console.log("inside use Effect")
     fetchPost()
     console.log(posts)
