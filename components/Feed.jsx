@@ -18,6 +18,7 @@ const Feed = () => {
       setFilteredPost(data)
     }
     console.log(posts)
+    console.log("inside use Effect")
     fetchPost()
     
   },[])
