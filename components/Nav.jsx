@@ -4,8 +4,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { signIn, signOut, useSession, getProviders} from 'next-auth/react'
+import { useRouter } from 'next/navigation';
 
  const Navbar = () => {
+  const router = useRouter()
+
   const {data: session} = useSession()
   const [providers,setProviders] = useState(null) 
   const [toggleDropdown, setToggleDropdown] = useState(false)
@@ -15,8 +18,14 @@ import { signIn, signOut, useSession, getProviders} from 'next-auth/react'
       setProviders(response)
     }
 
-    setProvider();//changed to setProvider. Initally it was setProviders
+    setProvider();
+    // console.log(providers)//changed to setProvider. Initally it was setProviders
   },[])
+
+  const handleSignOut = async ()=>{
+    await signOut()
+    router.push('/')
+  }
   
   return (
     <nav className='flex-between w-full mb-16 pt-3'>
@@ -34,12 +43,13 @@ import { signIn, signOut, useSession, getProviders} from 'next-auth/react'
                   <Link href= '/create-prompt' className='black_btn'>
                     Create Post
                   </Link>
-                  <button type='button' onClick={signOut} className='outline_btn'>
+                  <button type='button' onClick={handleSignOut} className='outline_btn'>
                     Sign Out
                   </button>
+                  
 
                   <Link href='/profile'>
-                    <Image src='/assets/images/logo.svg' alt= "Profile" width={37} height={37} className='rounded-full'></Image>
+                    <Image src={session?.user.image} alt= "Profile" width={37} height={37} className='rounded-full'></Image>
                   </Link>
             </div>
           ):(
@@ -62,7 +72,7 @@ import { signIn, signOut, useSession, getProviders} from 'next-auth/react'
         <div className='sm:hidden flex relative'>
           {session?.user? (
             <div className='flex '>
-                <Image src='/assets/images/logo.svg' alt= "Profile" width={37} height={37} className='rounded-full' onClick={()=>{ setToggleDropdown((prev)=>!prev)
+                <Image src={session?.user.image} alt= "Profile" width={37} height={37} className='rounded-full' onClick={()=>{ setToggleDropdown((prev)=>!prev)
               }}/>
                 {toggleDropdown && ( 
                 <div className='dropdown'>
@@ -82,6 +92,7 @@ import { signIn, signOut, useSession, getProviders} from 'next-auth/react'
               
             </div>
           ): ( <>
+            {console.log(providers)}
             {providers && Object.values(providers).map((provider)=> (
               <button type='button' key={provider.name} onClick={()=>{
                 signIn(provider.id)
